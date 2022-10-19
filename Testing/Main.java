@@ -1,11 +1,23 @@
-// to turn back on : java.inlayHints.parameterNames.enabled
-// https://stackoverflow.com/questions/71865654/why-is-vs-code-showing-this-these-labels-or-parameter-names-for-system-out-print#:~:text=in%20this%20question's%20case%2C%20the,for%20print%20and%20println%20functions.
-
-package Testing;
 
 public class Main{
-    public static void main(String[] args){
-        System.out.println("?");
-        System.out.println("09876543");
-    }
+	public static void main(String[] args){
+		String letters = "abcdefghijklmnopqrstuvwxyz"; 
+		String phrase = "This is a phrase!";
+
+		System.out.println("The following shows the letter frequencies for the phrase");
+
+    /* your code here */
+        phrase = phrase.toLowerCase();
+        int count = 0;
+        for(int i = 0; i<letters.length();i++){
+            count = 0;
+            for(int j = 0; j<phrase.length();j++){ 
+                if(phrase.substring(j,j+1).equals(letters.substring(i,i+1))){
+                    count += 1;
+                }
+            }      
+           System.out.println(letters.substring(i,i+1) + ": " + String.valueOf(count));            
+        }
+	}
 }
+
