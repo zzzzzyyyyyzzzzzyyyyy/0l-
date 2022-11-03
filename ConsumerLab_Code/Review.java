@@ -22,11 +22,43 @@ public class Review {
     double goodBad = totalSentiment(review);
     //System.out.println(goodBad);
     //System.out.println(starRating(goodBad));
-
-
-    for(int i = 0; i < sentiment.length(); i++){
-      System.out.println();
+    
+    try{
+      FileWriter myWriter = new FileWriter("/workspace/0l-/ConsumerLab_Code/negativeAdjectives.txt");
+      
+      sentiment.forEach((key, value) -> {
+        if(value < 0.0){
+          try{
+          myWriter.write(key + "," + value + "\n");
+          }catch(Exception e){
+            e.printStackTrace();
+          }
+        }
+      });
+      myWriter.close(); 
+    }catch(Exception e){
+      e.printStackTrace();
     }
+    
+    try{
+      FileWriter myWriter2 = new FileWriter("/workspace/0l-/ConsumerLab_Code/positiveAdjectives.txt");
+      
+      sentiment.forEach((key, value) -> {
+        if(value > 0.0){
+          try{
+          myWriter2.write(key + "," + value + "\n");
+          }catch(Exception e){
+            e.printStackTrace();
+          }
+        }
+      });
+      myWriter2.close(); 
+    }catch(Exception e){
+      e.printStackTrace();
+    }
+
+
+    String textie = fakeReview(review);
 
     
   }
@@ -50,7 +82,7 @@ public class Review {
       Scanner input = new Scanner(new File("/workspace/0l-/ConsumerLab_Code/positiveAdjectives.txt"));
       while(input.hasNextLine()){
         String temp = input.nextLine().trim();
-        System.out.println(temp);
+        //System.out.println(temp);
         posAdjectives.add(temp);
       }
       input.close();
@@ -70,6 +102,7 @@ public class Review {
     catch(Exception e){
       System.out.println("Error reading or parsing negativeAdjectives.txt");
     }   
+
   }
   
   /** 
@@ -215,6 +248,45 @@ public class Review {
     else{
       return 5;
     }
+  }
+
+  public static String fakeReview(String filename){ //makes bad reviews good
+    String adj = "";
+    int j = 0;
+    Scanner scan = new Scanner("/workspace/0l-/ConsumerLab_Code/negativeAdjectives.txt");
+
+    for(int i = 0; i < filename.length(); i++){
+      if(filename.substring(i,i+1).equals("*")){
+        adj = "";
+        j = i;
+        while(!filename.substring(j,j+1).equals(" ")){
+          adj += filename.substring(j,j+1);
+          j += 1;
+        }
+
+        System.out.println(adj);
+        adj = adj.substring()
+
+        //if adj in txt file
+        boolean flag = false;
+        int count = 0;
+        while(scan.hasNextLine()) {
+          String line = scan.nextLine();
+          //System.out.println(line);
+          if(line.indexOf(adj)!=-1) {
+              flag = true;
+              count = count+1;
+          }
+        }
+        if(flag == true){
+          filename.replace(adj, randomPositiveAdj());
+          flag = false;
+        }
+      }
+    }
+    System.out.println(filename);
+
+    return "";
   }
 
 }
