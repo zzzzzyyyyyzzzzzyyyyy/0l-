@@ -183,7 +183,18 @@ public class Review {
   public static String randomPositiveAdj()
   {
     int index = (int)(Math.random() * posAdjectives.size());
-    return posAdjectives.get(index);
+    
+    String word = "";
+
+    for(int i = 0; i < posAdjectives.get(index).length(); i++){
+      if(posAdjectives.get(index).substring(i,i+1).equals(",")){
+        word = posAdjectives.get(index).substring(0,i);
+        break;
+      }
+    }
+    //System.out.println("new pos word: " + word);
+    //return posAdjectives.get(index);
+    return word;
   }
   
   /** 
@@ -253,39 +264,61 @@ public class Review {
   public static String fakeReview(String filename){ //makes bad reviews good
     String adj = "";
     int j = 0;
-    Scanner scan = new Scanner("/workspace/0l-/ConsumerLab_Code/negativeAdjectives.txt");
+    //Scanner scan = new Scanner("/workspace/0l-/ConsumerLab_Code/negativeAdjectives.txt");
 
-    for(int i = 0; i < filename.length(); i++){
+    for(int i = 0; i < filename.length()-1; i++){
       if(filename.substring(i,i+1).equals("*")){
         adj = "";
-        j = i;
-        while(!filename.substring(j,j+1).equals(" ")){
-          adj += filename.substring(j,j+1);
-          j += 1;
-        }
+        j = i+1;
+        System.out.println("sub: " + filename.substring(j,j+1));
+        //try{
+          while(!filename.substring(j,j+1).equals(" ")){
+            if(filename.substring(j,j+1).equals(".") || filename.substring(j,j+1).equals(",")){
+              break;
+            }
+            else{
+              adj += filename.substring(j,j+1);
+              j += 1;
+            }
+          }        
+        //}
+        //catch(Exception e){
+        //  System.out.print("");
+        //}
 
-        System.out.println(adj);
-        adj = adj.substring()
+
+        adj = removePunctuation(adj);
+        System.out.println("adj: " + adj);
 
         //if adj in txt file
         boolean flag = false;
         int count = 0;
-        while(scan.hasNextLine()) {
-          String line = scan.nextLine();
-          //System.out.println(line);
-          if(line.indexOf(adj)!=-1) {
+        try {
+          Scanner scan = new Scanner(new File("/workspace/0l-/ConsumerLab_Code/negativeAdjectives.txt"));
+
+          while(scan.hasNextLine()) {
+            //String line = scan.nextLine();
+            String line = scan.nextLine().trim();
+            if(line.indexOf(adj)!=-1) {
               flag = true;
               count = count+1;
+            }
           }
+          scan.close();
+          //String pos = randomPositiveAdj();
+          if(flag == true){
+            filename = filename.replace(adj, randomPositiveAdj());//.substring(0, pos.length()+1));
+            flag = false;
+          }
+
         }
-        if(flag == true){
-          filename.replace(adj, randomPositiveAdj());
-          flag = false;
-        }
+        catch(Exception e){
+          System.out.println("Error reading or parsing negativeAdjectives.txt");
+        }    
       }
     }
+    filename = filename.replace("*", "");
     System.out.println(filename);
-
     return "";
   }
 
